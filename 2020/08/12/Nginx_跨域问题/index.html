@@ -1,0 +1,722 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="shanzhi7">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="什么是跨域跨域：指的是浏览器不能执行其他网站的脚本。它是由浏览器的同源策略造成的，是浏览器对javascript施加的安全限制。 例如：a页面想获取b页面资源，如果a、b页面的协议、域名、端口、子域名不同，所进行的访问行动都是跨域的，而浏览器为了安全问题一般都限制了跨域访问，也就是不允许跨域请求资源。注意：跨域限制访问，其实是浏览器的限制。理解这一点很重要！！！ 同源策略：是指协议，域名，端口都要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx_跨域问题">
+<meta property="og:url" content="https://shanzhi7.github.io/2020/08/12/Nginx_%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="shanzhi7 BLOG">
+<meta property="og:description" content="什么是跨域跨域：指的是浏览器不能执行其他网站的脚本。它是由浏览器的同源策略造成的，是浏览器对javascript施加的安全限制。 例如：a页面想获取b页面资源，如果a、b页面的协议、域名、端口、子域名不同，所进行的访问行动都是跨域的，而浏览器为了安全问题一般都限制了跨域访问，也就是不允许跨域请求资源。注意：跨域限制访问，其实是浏览器的限制。理解这一点很重要！！！ 同源策略：是指协议，域名，端口都要">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-03T07:25:55.791Z">
+<meta property="article:author" content="shanzhi7">
+<meta property="article:tag" content="跨域">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Nginx_跨域问题 - shanzhi7 BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"shanzhi7.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>shanzhi7 BLOG</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Nginx_跨域问题"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-08-12 00:00" pubdate>
+          2020年8月12日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          634 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          6 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Nginx_跨域问题</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="什么是跨域"><a href="#什么是跨域" class="headerlink" title="什么是跨域"></a>什么是跨域</h1><p>跨域：指的是浏览器不能执行其他网站的脚本。它是由浏览器的同源策略造成的，是浏览器对javascript施加的安全限制。</p>
+<p>例如：a页面想获取b页面资源，如果a、b页面的协议、域名、端口、子域名不同，所进行的访问行动都是跨域的，而浏览器为了安全问题一般都限制了跨域访问，也就是不允许跨域请求资源。注意：跨域限制访问，其实是浏览器的限制。理解这一点很重要！！！</p>
+<p>同源策略：是指协议，域名，端口都要相同，其中有一个不同都会产生跨域；</p>
+<h1 id="碰到个跨域问题使用之前的方法不能解决，终于找到解决方法如下"><a href="#碰到个跨域问题使用之前的方法不能解决，终于找到解决方法如下" class="headerlink" title="碰到个跨域问题使用之前的方法不能解决，终于找到解决方法如下"></a>碰到个跨域问题使用之前的方法不能解决，终于找到解决方法如下</h1><h3 id="A调B发生跨域，应该在B上配置跨域"><a href="#A调B发生跨域，应该在B上配置跨域" class="headerlink" title="A调B发生跨域，应该在B上配置跨域"></a>A调B发生跨域，应该在B上配置跨域</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># #设置跨域配置 Start</span><br><span class="hljs-string">set</span> <span class="hljs-string">$cors_origin</span> <span class="hljs-string">&quot;&quot;</span><span class="hljs-string">;</span><br><span class="hljs-string">if</span> <span class="hljs-string">($http_origin</span> <span class="hljs-string">~*</span> <span class="hljs-string">&quot;^https://co-customer-pre.bhfae.com$&quot;</span><span class="hljs-string">)&#123;</span><br>        <span class="hljs-string">set</span> <span class="hljs-string">$cors_origin</span> <span class="hljs-string">$http_origin;</span><br><span class="hljs-string">&#125;</span><br><br><span class="hljs-string">add_header</span> <span class="hljs-string">Access-Control-Allow-Origin</span> <span class="hljs-string">$cors_origin</span> <span class="hljs-string">always;</span> <br><span class="hljs-string">add_header</span> <span class="hljs-string">Access-Control-Allow-Methods</span> <span class="hljs-string">GET,POST,PUT,DELETE,OPTIONS</span> <span class="hljs-string">always;</span><br><span class="hljs-string">add_header</span> <span class="hljs-string">Access-Control-Allow-Credentials</span> <span class="hljs-literal">true</span> <span class="hljs-string">always;</span><br><span class="hljs-string">add_header</span> <span class="hljs-string">Access-Control-Allow-Headers</span> <span class="hljs-string">DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,x-auth-token</span> <span class="hljs-string">always;</span><br><span class="hljs-string">add_header</span> <span class="hljs-string">Access-Control-Max-Age</span> <span class="hljs-number">1728000</span> <span class="hljs-string">always;</span><br><br><span class="hljs-comment"># 预检请求处理</span><br><span class="hljs-string">if</span> <span class="hljs-string">($request_method</span> <span class="hljs-string">=</span> <span class="hljs-string">OPTIONS)</span> &#123;<br>        <span class="hljs-string">return</span> <span class="hljs-number">204</span><span class="hljs-string">;</span><br>&#125;<br><span class="hljs-comment"># #设置跨域配置 End</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="如何解决跨域"><a href="#如何解决跨域" class="headerlink" title="如何解决跨域"></a>如何解决跨域</h1><h2 id="方法一修改nginx配置，不用修改应用代码"><a href="#方法一修改nginx配置，不用修改应用代码" class="headerlink" title="方法一修改nginx配置，不用修改应用代码"></a>方法一修改nginx配置，不用修改应用代码</h2><p>Nginx配置代码示例</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">server</span> &#123;<br>    <span class="hljs-string">listen</span> <span class="hljs-number">80</span><span class="hljs-string">;</span><br>    <span class="hljs-string">server_name</span> <span class="hljs-string">localhost</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><span class="hljs-string">;</span><br>	<span class="hljs-string">location</span> <span class="hljs-string">/</span> &#123;<br>		<span class="hljs-comment"># 允许跨域请求的“域”</span><br>		<span class="hljs-string">add_header</span> <span class="hljs-string">&#x27;Access-Control-Allow-Origin&#x27;</span> <span class="hljs-string">$http_origin;</span><br>		<span class="hljs-comment"># 允许客户端提交Cookie</span><br>		<span class="hljs-string">add_header</span> <span class="hljs-string">&#x27;Access-Control-Allow-Credentials&#x27;</span> <span class="hljs-string">&#x27;true&#x27;</span><span class="hljs-string">;</span><br>		<span class="hljs-comment"># 允许客户端的请求方法</span><br>		<span class="hljs-string">add_header</span> <span class="hljs-string">&#x27;Access-Control-Allow-Methods&#x27;</span> <span class="hljs-string">&#x27;GET, POST, OPTIONS, DELETE, PUT&#x27;</span><span class="hljs-string">;</span><br>		<span class="hljs-comment"># 允许客户端提交的的请求头</span><br>		<span class="hljs-string">add_header</span> <span class="hljs-string">&#x27;Access-Control-Allow-Headers&#x27;</span> <span class="hljs-string">&#x27;Origin, x-requested-with, Content-Type, Accept, Authorization&#x27;</span><span class="hljs-string">;</span><br>		<span class="hljs-comment"># 允许客户端访问的响应头</span><br>		<span class="hljs-string">add_header</span> <span class="hljs-string">&#x27;Access-Control-Expose-Headers&#x27;</span> <span class="hljs-string">&#x27;Cache-Control, Content-Language, Content-Type, Expires, Last-Modified, Pragma&#x27;</span><span class="hljs-string">;</span><br>		<span class="hljs-comment"># 处理预检请求</span><br>		<span class="hljs-string">if</span> <span class="hljs-string">($request_method</span> <span class="hljs-string">=</span> <span class="hljs-string">&#x27;OPTIONS&#x27;</span><span class="hljs-string">)</span> &#123;<br>			<span class="hljs-comment"># 预检请求缓存时间</span><br>			<span class="hljs-string">add_header</span> <span class="hljs-string">&#x27;Access-Control-Max-Age&#x27;</span> <span class="hljs-number">1728000</span><span class="hljs-string">;</span><br>			<span class="hljs-string">add_header</span> <span class="hljs-string">&#x27;Content-Type&#x27;</span> <span class="hljs-string">&#x27;text/plain; charset=utf-8&#x27;</span><span class="hljs-string">;</span><br>			<span class="hljs-string">add_header</span> <span class="hljs-string">&#x27;Content-Length&#x27;</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br>			<span class="hljs-string">return</span> <span class="hljs-number">204</span><span class="hljs-string">;</span><br>		&#125;<br>		<br>		<span class="hljs-comment"># SpringBoot 应用访问路径</span><br>		<span class="hljs-string">proxy_pass</span> <span class="hljs-string">http://127.0.0.1:8080;</span><br>		<br>		<span class="hljs-string">proxy_set_header</span> <span class="hljs-string">Host</span> <span class="hljs-string">$host;</span><br>		<span class="hljs-string">proxy_set_header</span> <span class="hljs-string">X-Real-IP</span> <span class="hljs-string">$remote_addr;</span><br>		<span class="hljs-string">proxy_set_header</span> <span class="hljs-string">X-Forwarded-For</span> <span class="hljs-string">$proxy_add_x_forwarded_for;</span><br>		<span class="hljs-string">proxy_set_header</span> <span class="hljs-string">X-Forwarded-Proto</span> <span class="hljs-string">$scheme;</span><br>		<br>		<span class="hljs-string">proxy_connect_timeout</span> <span class="hljs-number">600</span><span class="hljs-string">;</span><br>		<span class="hljs-string">proxy_read_timeout</span> <span class="hljs-number">600</span><span class="hljs-string">;</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="方法二-前后端使用同一nginx"><a href="#方法二-前后端使用同一nginx" class="headerlink" title="方法二 前后端使用同一nginx"></a>方法二 前后端使用同一nginx</h2><p><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAIiAmcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKA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QAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRWPezzajdPptlI0cacXVwhwUyM7F/2iD17A/SgBJ5ZNYupLO1cpZQsUuZ1P32HWNT7fxHt065xqwwx28KQwxrHGihVVRgKB0AHpSW1tDZ20dvbxrHDGu1EUcAVLQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAVb6wh1CARy5DK2+ORfvRuOjKex5P4EjoaradfSmdtPv8LexruDAYWdOm9fzAI7Ej1FadUtR05L+FRuMU8Tb4Z0+9G3qP5EdxQBdorP02/e4aS1ulWO9gA8xAeGHZ19j+nStCgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooqtqF9DptlJdTk7UwAqjJdicKoHckkAfWgCrq19ND5dlYhTf3ORGWGViXvI3sPTueKs6fYRabZJbQlmAyWdzlpGPJZj3JPJqrpNjLF5t7e4N/c4MmDkRr2jX2H6nJrUoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAzNVsJpvKvbIhb+2yY9xwsin70bex9exwfY2dPv4tRs0uIwy5yrxuMNGw4KkeoNWqw9QB0W+bVkOLOTAvU7L2Ev4d/bntQBuUUAgjIOQaKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKwkA1vWvPPzWWnOREO0k/Qt/wABGQPdj7Ysa3eTRxxWFkwF/eEpET0jUffkPsoP4kqO9XrK0hsLOK1t1IiiUKuTkn3J7k+tAE9FFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABTXRZEZHUMrDBBHBFOooAxNHY6bcvokrEpEN9m7dWhz9z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2aKZDKs8CTIco6hlPqDzT6ACiiigAooooAKKKKACiiigAooooAKKKKAMbVIZrG7/ALXs4mkZU23MKDJljHcDuy8kDvyPStW3niuoEngkWSKRQyupyCDUlY1xp1xYTyXmkKuXYvNaMdqSk8kj+6x656E9euaANmis3T9ctL+Vrc+ZbXqDL2lwuyVR64/iH+0pI960qACiiigAooooAKKKKACioLu8trG3e4u544IU+88jBQPxrJ+1X2ufLaRTWWnnk3MqbJZR/sKeVHuwB9B3oAdqEj6xdNpVsT9nTH22YdAD/wAsgf7xHX0B/wBoVsoixIqIAFUYAHYVFZ2cFjbLb20YjjXoo9TySfUk8k96noAKKKKACiiigAooooAKQkAZJwBS1k+JLh7fRJli/wBdcEW8X+852j+dAEPhUGTS5b5h819cyXH/AAEthf8Ax0KPwrcqG0tks7OG2j+5EgQfgKmoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACmuiyIyOAVYYIPcU6igDE8MO0emSWEhJl0+d7Vs9cDBQn6oyH8a26wnH9m+MFkJIt9VhEZ9BPFkj8WQn/v0K3aACiiigAooooAKKKKACiiigAooooAKKKKACiiigCpf6ZZ6nEqXUIfaco4OHQ+qsOQfpWaNN1iw/48dTFxEOkN6uT+Drg/mK3aKAMI63qNsxW70G7IH8dpIkq/kSp/Q0v/AAl2joP38tzbMOq3FpLHj81xW5RQBhf8Jp4Ywd3iDTUwMkPcqp/Iml/4TDw+3+r1KOb/AK4K0n/oINblFAGEfEvnNix0jVLrPR/s/kr/AORCp/IGl3eIL7AC2unRkcknzpP6AfrW5RQBkW3h+2juUuruWa/uk5SS5YHYf9lRhR9cZ9616KKACiiigAooooAKKKKACiiigArCvSL/AMWafYg5Sxia9mHoWykQP1/en/gFbhIUZJAA9aw/DafaBfaw3J1CfdFntCg2xj6HBf6uaAN2iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAMvxBZyXekSGAf6TAy3EB/20OR+eMfjVvT7yPULCC7i+5KgcD09qs1haLmw1XUNHYYRG+1W3/XJ+oH+64YfQr60AbtFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAGN4kmk/s5bG3bFxfSC3Q+gP3j+Cg1qwQpb28cEY2xxqFUegFY9sf7T8U3NzjNvpqfZoz2aZsNIfwXYv1LitygAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigArG8QQyQxwavbKTcWDFio6yQniRPyww91WtmkIDAgjIPBFADYZo7iCOaJg8cihlYdCDT6w9FJ0+9utFc/LD++tc94WPT/gLZH5etblABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFZ2tag2n6a8kKh7mQiKBD/FI3A/DufYVo1hRf8TbxJJNw1ppv7pPRpyPmP/ARgfUn0oA0dK09NL0yC0Qligy7nq7k5Zj7kkn8auUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAGVrdnM8cWoWSg31kS8an/AJaofvxn/eA49CFPartleQ39lDdQNuilUMueD9COx9qsVhRY0XWxbn5bLUXLQntHPjJX/gQBI/3T7ZAN2iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopGZURmYhVUZJJwBQBm61fy2lskNqA17cv5Vup6Bj1Yj0Ucn8u9WdNsIdMsIrSHJVAcs3V2JyzH3JJJ9zWdo4OqXDa5IpCSLss1YciLP3/wDgfB+mO+a26ACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKq6hYQ6lYyWs+dr4IZThkYHKsD2IIBH0q1RQBmaVfyzGWyvcLf2xAkwMCRezr7H9DkVp1matYzSmK+sdov7bOwMcCVe8bex7HsefWrOn30Wo2SXMO4BshkcYaNhwVYdiDxQBaooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigArD1A/21eNpMfNpHg3zdmB6Rfj39uO9WdWv5YfKsrIK1/cnEYbpGv8AFI3sP1OBVnT7CLTrNbeMs2CWeRvvSMerH3JoAtAADAGAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACsi8gm027fUrNDJE5zd26Dl+Mb1/wBoADjuB7CteigCK3uIbu3juLeRZIZBuR1OQRUtYs0L6LdyXlqhaxmbfcwIOUY9ZFHv/EO/XrnOvFLHPCksTq8bqGV1OQwPQg0APooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKpalqEdhCp2tLNI2yGFPvSN6D+ZPYVJfX0NhB5kpJZjtjjXlpG7Ko7niqunWM3nvqN9g3kq7VQHKwJ/cX+ZPc+wFAD9NsHgaS7u2WS+nA8xgOFUdEX2H69a0KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKxZbKbR53u9Mi320jF7iyX1PV4/QnqV6E89SSdqigCC0vLe+t1ntpRJG3Qjse4I7H2qesm90udLk3+lSRw3R5likH7q4/3sdG9GH4gjipLDWIruU200b2t6oy9tLjd9QRww9xQBpUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABVHUNTjsvLiCma6myIYE+85/oB3J4FVLjWJLmZ7PRo1ubheHnb/Uwn/aP8R/2V5+nWrWnaYliGlkka4vJf9bcOAGb2A/hUdgKAI7DTHS4N/fss1+y7QQPlhU/wIOw6ZPU4GegA06KKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAqpf6ba6lEEuEOVOUkU7XQ+qsOQat0UAYX2zU9GOy+he+sh0vIFzIg/6aR9/95c5/uitWzvrXUIBNazpLGe6nNWKy7zQra4nN1bvJZ3n/AD3tztJ/3h0b8RQBqUVgtea7prf6Vpyalb/89rFgso92icgH/gLE+i1cste0y/kMUN0omH3oJVMci/VGAI/KgDSooooAKKKKACiiigAoopCwUEsQAOpJoAWise48TafHK0Fr5uoXQ/5YWSeY2fc/dX/gRAqJU17VF/f+VpEDfwROJpyPdsbUP03fWgC/f6vZacQk0haZvuQxqXkf6KOaoC31LW+b5G0+wJ4tkkzNKP8Apow4Qf7Kk5/vdRV/T9IstMDG2i/eP9+VyWd/qx5NXqAI4LeG1gSCCNY4kGFVRgCpKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAqre6bZaigS8tYpgPul1yV+h6j8KtUUAYR8NCJi9jqmoWp7KJt6D/gLZpRb+JLY/u72xvVHaeExsf8AgSkj/wAdrcooAw/t3iVPv6HYyD/plqJz+TRD+dJ/bWsIcSeFr5veG5t2H/j0i1u0UAYQ1fW3H7vwxOn/AF3u4V/9BZqcLrxNJ00nTYQehe/diPwEQ/nW3RQBh/2fr9z/AMfOsQ24PVbS2/q5NKnhezY7ry4vL4nqLmclf++RgVt0UARwW8FrCsNvDHDEvRI1CgfgKkoooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//Z" srcset="/img/loading.gif" lazyload></p>
+<h3 id="方法三修改应用代码"><a href="#方法三修改应用代码" class="headerlink" title="方法三修改应用代码"></a>方法三修改应用代码</h3><h1 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h1><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8fa2acd103ea">什么是跨域，如何解决</a> <br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kevinblandy/p/13294320.html">Nginx的跨域配置</a>\</p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><h3 id="跨域配置重复"><a href="#跨域配置重复" class="headerlink" title="跨域配置重复"></a>跨域配置重复</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">has been blocked by CORS policy:</span> <span class="hljs-string">The</span> <span class="hljs-string">&#x27;Access-Control-Allow-Origin&#x27;</span> <span class="hljs-string">header</span> <span class="hljs-string">contains</span> <span class="hljs-string">multiple</span> <span class="hljs-string">values</span> <span class="hljs-string">&#x27;*, *&#x27;</span><span class="hljs-string">,</span> <span class="hljs-string">but</span> <span class="hljs-string">only</span> <span class="hljs-string">one</span> <span class="hljs-string">is</span> <span class="hljs-string">allowed.</span><br></code></pre></td></tr></table></figure>
+<p>应该是访问链路中有两个地方都配置了跨域，导致冲突，删除一处跨域配置即可</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Nginx/" class="category-chain-item">Nginx</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%B7%A8%E5%9F%9F/" class="print-no-link">#跨域</a>
+      
+        <a href="/tags/Nginx/" class="print-no-link">#Nginx</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Nginx_跨域问题</div>
+      <div>https://shanzhi7.github.io/2020/08/12/Nginx_跨域问题/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>shanzhi7</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年8月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年1月3日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/08/13/Other_%E4%BA%BA%E7%B1%BB%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%9F%E5%AD%A9%E5%AD%90/" title="Other_人类为什么要生孩子">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Other_人类为什么要生孩子</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/08/Jenkins_%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81/" title="Jenkins_修改密码">
+                        <span class="hidden-mobile">Jenkins_修改密码</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="shanzhi7">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基础知识　　FTP只通过TCP连接,没有用于FTP的UDP组件.FTP不同于其他服务的是它使用了两个端口, 一个数据端口和一个命令端口(或称为控制端口)。通常21端口是命令端口，20端口是数据端口。当混入主动&#x2F;被动模式的概念时，数据端口就有可能不是20了。 　　 主动模式FTP主动模式下，FTP客户端从任意的非特殊的端口（N &gt; 1023）连入到FTP服务器的命令端口–21端口。然">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FTP主动被动模式">
+<meta property="og:url" content="https://shanzhi7.github.io/2020/06/04/FTP_%E4%B8%BB%E5%8A%A8%E6%A8%A1%E5%BC%8F%E8%A2%AB%E5%8A%A8%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="shanzhi7 BLOG">
+<meta property="og:description" content="基础知识　　FTP只通过TCP连接,没有用于FTP的UDP组件.FTP不同于其他服务的是它使用了两个端口, 一个数据端口和一个命令端口(或称为控制端口)。通常21端口是命令端口，20端口是数据端口。当混入主动&#x2F;被动模式的概念时，数据端口就有可能不是20了。 　　 主动模式FTP主动模式下，FTP客户端从任意的非特殊的端口（N &gt; 1023）连入到FTP服务器的命令端口–21端口。然">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-28T05:41:14.061Z">
+<meta property="article:author" content="shanzhi7">
+<meta property="article:tag" content="FTP">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>FTP主动被动模式 - shanzhi7 BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"shanzhi7.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>shanzhi7 BLOG</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="FTP主动被动模式"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-06-04 00:00" pubdate>
+          2020年6月4日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">FTP主动被动模式</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h4><p>　　FTP只通过TCP连接,没有用于FTP的UDP组件.FTP不同于其他服务的是它使用了两个端口, 一个数据端口和一个命令端口(或称为控制端口)。通常21端口是命令端口，20端口是数据端口。当混入主动&#x2F;被动模式的概念时，数据端口就有可能不是20了。
+　　</p>
+<h4 id="主动模式FTP"><a href="#主动模式FTP" class="headerlink" title="主动模式FTP"></a>主动模式FTP</h4><p>主动模式下，FTP客户端从任意的非特殊的端口（N &gt; 1023）连入到FTP服务器的命令端口–21端口。然后客户端在N+1（N+1 &gt;&#x3D; 1024）端口监听，并且通过N+1（N+1 &gt;&#x3D; 1024）端口发送命令给FTP服务器。服务器会反过来连接用户本地指定的数据端口，比如20端口。</p>
+<p>　　以服务器端防火墙为立足点，要支持主动模式FTP需要打开如下交互中使用到的端口：</p>
+<ul>
+<li>FTP服务器命令（21）端口接受客户端任意端口（客户端初始连接）</li>
+<li>FTP服务器命令（21）端口到客户端端口（&gt;1023）（服务器响应客户端命令）</li>
+<li>FTP服务器数据（20）端口到客户端端口（&gt;1023）（服务器初始化数据连接到客户端数据端口）</li>
+<li>FTP服务器数据（20）端口接受客户端端口（&gt;1023）（客户端发送ACK包到服务器的数据端口）</li>
+</ul>
+<p>用图表示如下：</p>
+<p><img src="data:image/jpeg;base64,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xuAc4YKAeajs/D2i6dcC4sdH0+1nAIEkFsiMAevIGa0qACiiigCpqn/IIvf+uD/+gmqvhj/kUtG/68YP/QBVrVP+QRe/9cH/APQTVXwx/wAilo3/AF4wf+gCgDVooooAKKKKACiiigDn7j/koem/9gq7/wDRtvXQVz9x/wAlD03/ALBV3/6Nt66CgAooooAKKKKACiiigAooooAKKKKACiiigBkn3fxqKpZPu/jUVRLcpD4/vfhUtRR/e/CpaqOwmFFFFMQUUUUAFFFFABRRRQAUUUUAFYfjP/kRfEP/AGDbn/0U1blYfjP/AJEXxD/2DLn/ANFNQBr2/wDx7Rf7g/lUtRW//HtF/uD+VS0AFFFFABRRRQAVz8f/ACUO5/7BUX/o2Sugrn4/+Sh3P/YKi/8ARslAHQUUUUAFFFFABRRRQAUUUUAFFFFABRRRQBU1T/kEXv8A1wf/ANBNVfDH/IpaN/14wf8AoAq1qn/IIvf+uD/+gmqvhj/kUtG/68YP/QBQBq0UUUAFFFFABRRRQBz9x/yUPTf+wVd/+jbeugrn7j/koem/9gq7/wDRtvXQUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAMk+7+NRVLJ938aiqJblIfH978KlqKP734VLVR2EwooopiCiiigAooooAKKKKACiiigArD8Z/8AIi+If+wZc/8Aopq3Kw/Gf/Ii+If+wZc/+imoA17f/j2i/wBwfyqWorf/AI9ov9wfyqWgAooooAKKKKACufj/AOSh3P8A2Cov/RsldBXPx/8AJQ7n/sFRf+jZKAOgooooAKKKKACiiigAooooAKKKKACiiigCpqn/ACCL3/rg/wD6Caq+GP8AkUtG/wCvGD/0AVa1T/kEXv8A1wf/ANBNVfDH/IpaN/14wf8AoAoA1aKKKACiiigAooooA5+4/wCSh6b/ANgq7/8ARtvXQVz9x/yUPTf+wVd/+jbeugoAKKKKACiiigAooooAKKKKACiiigAooooAZJ938aiqWT7v41FUS3KQ+P734VLUUf3vwqWqjsJhRRRTEFFFFABRRRQAUUUUAFFFFABWH4z/AORF8Qf9g25/9FNW5RQBFb/8e8X+4P5VLRRQAUUUUAFFFFABXPRf8lDuf+wVF/6NkroaKACiiigAooooAKKKKACiiigAooooAKKKKAKmqf8AIIvP+uD/APoJqp4X/wCRT0f/AK8YP/QFrWooAKKKKACiiigApDS0UAc9P/yULTv+wVd/+jbeuhoooAKKKKACiiigAooooAKKKKACiiigAooooAZJ938aiqWT7v41FUS3KQ+P734VLRRVR2EwooopiCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAZJ938aiooqJblI//2Q==" srcset="/img/loading.gif" lazyload></p>
+<p>　　在第1步中，客户端的命令端口与FTP服务器的命令端口建立连接，并发送命令“PORT 1027”。然后在第2步中，FTP服务器给客户端的命令端口返回一个”ACK”。在第3步中，FTP服务器发起一个从它自己的数据端口（20）到客户端先前指定的数据端口（1027）的连接，最后客户端在第4步中给服务器端返回一个”ACK”。</p>
+<p>　　主动方式FTP的主要问题实际上在于客户端。FTP的客户端并没有实际建立一个到服务器数据端口的连接，它只是简单的告诉服务器自己监听的端口号，服务器再回来连接客户端这个指定的端口。对于客户端的防火墙来说，这是从外部系统建立到内部客户端的连接，这是通常会被阻塞的。
+　　</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">/etc/vsftpd/vsftpd.conf</span><br><br><span class="hljs-string">port_enable=YES</span>    <span class="hljs-comment">#主动模式开启</span><br><br><br><br><span class="hljs-string">模式连接ftp</span> <span class="hljs-string">server时一定要加-A</span><br><br><span class="hljs-string">ftp</span> <span class="hljs-string">-A</span> <span class="hljs-number">10.0</span><span class="hljs-number">.0</span><span class="hljs-number">.10</span><br><br></code></pre></td></tr></table></figure>
+
+
+<p>　　</p>
+<h4 id="被动模式"><a href="#被动模式" class="headerlink" title="被动模式"></a>被动模式</h4><p>　　为了解决服务器发起到客户的连接的问题，人们开发了一种不同的FTP连接方式。这就是所谓的被动方式，或者叫做PASV，当客户端通知服务器它处于被动模式时才启用。</p>
+<p>　　在被动方式FTP中，命令连接和数据连接都由客户端，这样就可以解决从服务器到客户端的数据端口的入方向连接被防火墙过滤掉的问题。当开启一个FTP连接时，客户端打开两个任意的非特权本地端口（N &gt;; 1024和N+1）。第一个端口连接服务器的21端口，但与主动方式的FTP不同，客户端不会提交PORT命令并允许服务器来回连它的数据端口，而是提交PASV命令。这样做的结果是服务器会开启一个任意的非特权端口（P &gt;; 1024），并发送PORT P命令给客户端。然后客户端发起从本地端口N+1到服务器的端口P的连接用来传送数据。<br>　　<br>　　对于服务器端的防火墙来说，必须允许下面的通讯才能支持被动方式的FTP:</p>
+<ul>
+<li>FTP服务器命令（21）端口接受客户端任意端口（客户端初始连接）</li>
+<li>FTP服务器命令（21）端口到客户端端口（&gt;1023）（服务器响应客户端命令）</li>
+<li>FTP服务器数据端口（&gt;1023）接受客户端端口（&gt;1023）（客户端初始化数据连接到服务器指定的任意端口）</li>
+<li>FTP服务器数据端口（&gt;1023）到客户端端口（&gt;1023）（服务器发送ACK响应和数据到客户端的数据端口）</li>
+</ul>
+<p><img src="data:image/jpeg;base64,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" srcset="/img/loading.gif" lazyload></p>
+<p>　　在第1步中，客户端的命令端口与服务器的命令端口建立连接，并发送命令“PASV”。然后在第2步中，服务器返回命令”PORT 2024”，告诉客户端（服务器）用哪个端口侦听数据连接。在第3步中，客户端初始化一个从自己的数据端口到服务器端指定的数据端口的数据连接。最后服务器在第4 步中给客户端的数据端口返回一个”ACK”响应。</p>
+<p>　　被动方式的FTP解决了客户端的许多问题，但同时给服务器端带来了更多的问题。最大的问题是需要允许从任意远程终端到服务器高位端口的连接。幸运的是，许多FTP守护程序，包括流行的WU-FTPD允许管理员指定FTP服务器使用的端口范围。详细内容参看附录1。 </p>
+<p>　　第二个问题是客户端有的支持被动模式，有的不支持被动模式，必须考虑如何能支持这些客户端，以及为他们提供解决办法。例如，Solaris提供的FTP命令行工具就不支持被动模式，需要第三方的FTP客户端，比如ncftp。</p>
+<p>　　随着WWW的广泛流行，许多人习惯用web浏览器作为FTP客户端。大多数浏览器只在访问ftp:&#x2F;&#x2F;这样的URL时才支持被动模式。这到底是好还是坏取决于服务器和防火墙的配置。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>下面的图表会帮助管理员们记住每种FTP方式是怎样工作的：</p>
+<p>　　主动FTP：<br>   　　命令连接：客户端 &gt;1023端口 -&gt; 服务器 21端口<br>   　　数据连接：客户端 &gt;1023端口 &lt;- 服务器 20端口 </p>
+<p>　　被动FTP：<br>   　　命令连接：客户端 &gt;1023端口 -&gt; 服务器 21端口<br>   　　数据连接：客户端 &gt;1023端口 -&gt; 服务器 &gt;1023端口 </p>
+<p>　　下面是主动与被动FTP优缺点的简要总结： </p>
+<p>　　主动FTP对FTP服务器的管理有利，但对客户端的管理不利。因为FTP服务器企图与客户端的高位随机端口建立连接，而这个端口很有可能被客户端的防火墙阻塞掉。被动FTP对FTP客户端的管理有利，但对服务器端的管理不利。因为客户端要与服务器端建立两个连接，其中一个连到一个高位随机端口，而这个端口很有可能被服务器端的防火墙阻塞掉。</p>
+<p>　　幸运的是，有折衷的办法。既然FTP服务器的管理员需要他们的服务器有最多的客户连接，那么必须得支持被动FTP。我们可以通过为FTP服务器指定一个有限的端口范围来减小服务器高位端口的暴露。这样，不在这个范围的任何端口会被服务器的防火墙阻塞。虽然这没有消除所有针对服务器的危险，但它大大减少了危险。</p>
+<p><strong>Linux下默认模式为被动模式</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">/etc/vsftpd/vsftpd.conf</span><br><br><span class="hljs-string">pasv_enable=yes</span> <span class="hljs-comment">#被动模式</span><br><span class="hljs-string">pasv_min_port=4500</span> <span class="hljs-comment">#被动模式最小数据端口</span><br><span class="hljs-string">pasv_max_port=5000</span> <span class="hljs-comment">#被动模式最大数据端口</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="配置文件举例"><a href="#配置文件举例" class="headerlink" title="配置文件举例"></a>配置文件举例</h4><p><strong>&#x2F;etc&#x2F;vsftpd&#x2F;vsftpd.conf</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><br><span class="hljs-string">listen=yes</span><br><span class="hljs-string">listen_port=21</span><br><span class="hljs-string">max_clients=100</span><br><span class="hljs-string">max_per_ip=10</span><br><span class="hljs-string">local_max_rate=5120000</span><br><span class="hljs-string">anonymous_enable=no</span><br><span class="hljs-string">local_enable=yes</span><br><span class="hljs-string">write_enable=yes</span><br><span class="hljs-string">allow_writeable_chroot=YES</span><br><span class="hljs-string">chroot_local_user=yes</span><br><span class="hljs-string">chroot_list_enable=yes</span><br><span class="hljs-string">chroot_list_file=/etc/vsftpd/chroot_list</span><br><span class="hljs-string">guest_enable=yes</span><br><span class="hljs-comment">#virtual_use_local_privs=yes</span><br><span class="hljs-string">user_config_dir=/etc/vsftpd/user_config</span><br><span class="hljs-string">pasv_enable=yes</span><br><span class="hljs-string">pasv_min_port=4500</span><br><span class="hljs-string">pasv_max_port=5000</span><br><span class="hljs-string">tcp_wrappers=yes</span><br><span class="hljs-string">xferlog_enable=yes</span><br><span class="hljs-string">xferlog_file=/var/log/ftp/vsftpd.log</span><br><span class="hljs-string">idle_session_timeout=600</span><br><span class="hljs-string">data_connection_timeout=120</span><br><span class="hljs-string">accept_timeout=60</span><br><span class="hljs-string">connect_timeout=60</span><br><span class="hljs-string">connect_from_port_20=no</span><br><span class="hljs-string">local_umask=000</span><br><span class="hljs-string">pam_service_name=vsftpd</span><br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><br><span class="hljs-string">cat</span> <span class="hljs-string">/etc/vsftpd/user_config/user1</span><br><span class="hljs-string">local_root=/app/ftpfile</span><br><span class="hljs-string">anon_upload_enable=YES</span><br><span class="hljs-string">anon_other_write_enable=YES</span><br><span class="hljs-string">anon_mkdir_write_enable=YES</span><br><span class="hljs-string">anonymous_enable=YES</span><br><span class="hljs-string">anon_umask=000</span><br><br><span class="hljs-string">cat</span> <span class="hljs-string">/etc/vsftpd/chroot_list</span><br><span class="hljs-string">user1</span><br><span class="hljs-string">user2</span><br><br></code></pre></td></tr></table></figure>
+
+<h4 id="原文地址"><a href="#原文地址" class="headerlink" title="原文地址"></a>原文地址</h4><p>本文主要是转载原文，加上了一些东西<br><strong>原文地址</strong>：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaohh/p/4789813.html">https://www.cnblogs.com/xiaohh/p/4789813.html</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/FTP/" class="category-chain-item">FTP</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/FTP/" class="print-no-link">#FTP</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>FTP主动被动模式</div>
+      <div>https://shanzhi7.github.io/2020/06/04/FTP_主动模式被动模式/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>shanzhi7</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年6月4日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2021年5月28日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/08/Supervisord_QA/" title="supervisord_QA">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">supervisord_QA</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/29/WinServer_QA/" title="WinServer_QA">
+                        <span class="hidden-mobile">WinServer_QA</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

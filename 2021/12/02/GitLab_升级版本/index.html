@@ -1,0 +1,740 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="shanzhi7">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="简述为了GitLab的漏洞：Gitlab远程代码执行漏洞（CVE-2021-22205） https:&#x2F;&#x2F;cloud.tencent.com&#x2F;announce&#x2F;detail&#x2F;1630 需要对公司Gitlab进行版本升级：准备升级到最新的安全版本14.2.7  漏洞风险攻击者利用该漏洞可导致远程代码执行   影响版本GitLab（CE&#x2F;EE）&lt;&#x3D; 11.9，&lt; 13.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GitLab升级版本">
+<meta property="og:url" content="https://shanzhi7.github.io/2021/12/02/GitLab_%E5%8D%87%E7%BA%A7%E7%89%88%E6%9C%AC/index.html">
+<meta property="og:site_name" content="shanzhi7 BLOG">
+<meta property="og:description" content="简述为了GitLab的漏洞：Gitlab远程代码执行漏洞（CVE-2021-22205） https:&#x2F;&#x2F;cloud.tencent.com&#x2F;announce&#x2F;detail&#x2F;1630 需要对公司Gitlab进行版本升级：准备升级到最新的安全版本14.2.7  漏洞风险攻击者利用该漏洞可导致远程代码执行   影响版本GitLab（CE&#x2F;EE）&lt;&#x3D; 11.9，&lt; 13.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-12-02T02:06:59.190Z">
+<meta property="article:author" content="shanzhi7">
+<meta property="article:tag" content="GitLab">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>GitLab升级版本 - shanzhi7 BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"shanzhi7.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>shanzhi7 BLOG</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="GitLab升级版本"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-12-02 00:00" pubdate>
+          2021年12月2日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          702 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          6 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">GitLab升级版本</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h1><p>为了GitLab的漏洞：Gitlab远程代码执行漏洞（CVE-2021-22205） <a target="_blank" rel="noopener" href="https://cloud.tencent.com/announce/detail/1630">https://cloud.tencent.com/announce/detail/1630</a></p>
+<p>需要对公司Gitlab进行版本升级：准备升级到最新的安全版本14.2.7</p>
+<blockquote>
+<p>漏洞风险<br>攻击者利用该漏洞可导致远程代码执行</p>
+</blockquote>
+<blockquote>
+<p>影响版本<br>GitLab（CE&#x2F;EE）&lt;&#x3D; 11.9，&lt; 13.8.8<br>GitLab（CE&#x2F;EE）&lt;&#x3D; 13.9，&lt; 13.9.6<br>GitLab（CE&#x2F;EE）&lt;&#x3D; 13.10，&lt; 13.10.3</p>
+</blockquote>
+<blockquote>
+<p>安全版本<br>GitLab（CE&#x2F;EE） 13.8.8<br>GitLab（CE&#x2F;EE） 13.9.6<br>GitLab（CE&#x2F;EE） 13.10.3</p>
+</blockquote>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="下载GitLab安装包"><a href="#下载GitLab安装包" class="headerlink" title="下载GitLab安装包"></a>下载GitLab安装包</h2><p>因GitLab升级不能跨版本升级，只能逐版本升级 目前的GitLab版本是11.9.9 升级到最新的安全版本 需要升级11次，因是rpm包安装的，升级步骤并不复杂，只是次数多一些。</p>
+<p>8.11.Z-&gt; 8.12.0-&gt; 8.17.7-&gt; 9.5.10-&gt; 10.8.7-&gt; 11.11.8-&gt; 12.0.12-&gt; 12.1.17-&gt; 12.10.14-&gt; 13.0.14-&gt; 13.1.11-&gt; 13.8.8-&gt; 13.12.15-&gt;最新14.0.Z-&gt;最新14.1.Z-&gt;最新14.Y.Z</p>
+<p>在清华镜像站上下载各个版本的rpm包到服务器上</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yaml">[<span class="hljs-string">root@VM-24-14-centos</span> <span class="hljs-string">packages</span>]<span class="hljs-comment"># ll</span><br><span class="hljs-string">total</span> <span class="hljs-number">9126040</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">664112883</span> <span class="hljs-string">Aug</span> <span class="hljs-number">13</span>  <span class="hljs-number">2019 </span><span class="hljs-string">gitlab-ce-11.11.8-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">569226236</span> <span class="hljs-string">Apr</span> <span class="hljs-number">25</span>  <span class="hljs-number">2019 </span><span class="hljs-string">gitlab-ce-11.9.9-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">647345829</span> <span class="hljs-string">Dec</span> <span class="hljs-number">17</span>  <span class="hljs-number">2019 </span><span class="hljs-string">gitlab-ce-12.0.12-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">797740292</span> <span class="hljs-string">Jul</span>  <span class="hljs-number">7</span>  <span class="hljs-number">2020 </span><span class="hljs-string">gitlab-ce-12.10.14-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">674157789</span> <span class="hljs-string">Dec</span> <span class="hljs-number">17</span>  <span class="hljs-number">2019 </span><span class="hljs-string">gitlab-ce-12.1.17-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">728656981</span> <span class="hljs-string">Aug</span> <span class="hljs-number">19</span>  <span class="hljs-number">2020 </span><span class="hljs-string">gitlab-ce-13.0.14-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">736750197</span> <span class="hljs-string">Sep</span>  <span class="hljs-number">4</span>  <span class="hljs-number">2020 </span><span class="hljs-string">gitlab-ce-13.1.11-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">906240064</span> <span class="hljs-string">Nov</span>  <span class="hljs-number">4</span> <span class="hljs-number">06</span><span class="hljs-string">:37</span> <span class="hljs-string">gitlab-ce-13.12.15-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">867568698</span> <span class="hljs-string">Apr</span> <span class="hljs-number">14</span>  <span class="hljs-number">2021 </span><span class="hljs-string">gitlab-ce-13.8.8-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">911586673</span> <span class="hljs-string">Sep</span>  <span class="hljs-number">1</span> <span class="hljs-number">01</span><span class="hljs-string">:58</span> <span class="hljs-string">gitlab-ce-14.0.9-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">910639716</span> <span class="hljs-string">Nov</span> <span class="hljs-number">15</span> <span class="hljs-number">18</span><span class="hljs-string">:24</span> <span class="hljs-string">gitlab-ce-14.1.8-ce.0.el7.x86_64.rpm</span><br><span class="hljs-string">-rw-r--r--</span> <span class="hljs-number">1</span> <span class="hljs-string">root</span> <span class="hljs-string">root</span> <span class="hljs-number">930962278</span> <span class="hljs-string">Nov</span> <span class="hljs-number">27</span> <span class="hljs-number">02</span><span class="hljs-string">:57</span> <span class="hljs-string">gitlab-ce-14.2.7-ce.0.el7.x86_64.rpm</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="停止域名解析"><a href="#停止域名解析" class="headerlink" title="停止域名解析"></a>停止域名解析</h2><h2 id="备份GitLab数据文件"><a href="#备份GitLab数据文件" class="headerlink" title="备份GitLab数据文件"></a>备份GitLab数据文件</h2><p>在机器上执行下面的命令生成数据备份文件</p>
+<p>gitlab-rake gitlab:backup:create </p>
+<p>数据备份文件默认在：&#x2F;var&#x2F;opt&#x2F;gitlab&#x2F;backups&#x2F;</p>
+<p>将数据文件复制到别的机器上，当作备份</p>
+<h2 id="通过VMware生成虚拟机快照"><a href="#通过VMware生成虚拟机快照" class="headerlink" title="通过VMware生成虚拟机快照"></a>通过VMware生成虚拟机快照</h2><p>通过VMware生成虚拟机快照</p>
+<h2 id="版本升级"><a href="#版本升级" class="headerlink" title="版本升级"></a>版本升级</h2><p>需要gitlab处于启动状态</p>
+<p>rpm -Uvh xxx.rpm    升级版本，升级过程中 会自动备份数据文件</p>
+<p>gitlab-ctl reconfigure   重新加载配置</p>
+<p>gitlab-ctl  restart       重启gitlab相关组件</p>
+<p>gitlab-ctl  tail        查看应用日志</p>
+<p>重启成功后，等待30秒左右，配置本地hosts解析  登录gitlab界面 进行相关检查</p>
+<p>此步骤需要重复11次</p>
+<p>升级到最新安全版本后，打开ng解析  发布恢复公告</p>
+<h1 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h1><p><a target="_blank" rel="noopener" href="https://about.gitlab.com/releases/categories/releases/">GitLab官方版本公告</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.gitlab.com/ee/update/index.html#upgrade-paths">GitLab官方升级方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.gitlab.com/omnibus/update/gitlab_14_changes.html">GitLab官方版本变化说明</a></p>
+<p><a target="_blank" rel="noopener" href="http://git.hxmec.com/help/raketasks/backup_restore.md#storing-configuration-files">GitLab官方备份恢复说明</a></p>
+<p><a target="_blank" rel="noopener" href="https://about.gitlab.com/releases/2021/10/28/security-release-gitlab-14-4-1-released/">GitLab官方最新安全版本</a></p>
+<p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/">清华镜像站</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/GitLab/" class="category-chain-item">GitLab</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/GitLab/" class="print-no-link">#GitLab</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>GitLab升级版本</div>
+      <div>https://shanzhi7.github.io/2021/12/02/GitLab_升级版本/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>shanzhi7</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年12月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2021年12月2日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/12/09/GitLab_%E5%8D%87%E7%BA%A7%E5%AF%BC%E8%87%B4%E9%83%A8%E5%88%86%E9%A1%B9%E7%9B%AE%E6%97%A0%E6%B3%95%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%93%88%E5%B8%8C%E5%AD%98%E5%82%A8/" title="GitLab_升级导致部分项目无法转换为哈希存储">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">GitLab_升级导致部分项目无法转换为哈希存储</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/11/29/Prometheus_VMware_exporter/" title="Prometheus_VMware_exporter">
+                        <span class="hidden-mobile">Prometheus_VMware_exporter</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
