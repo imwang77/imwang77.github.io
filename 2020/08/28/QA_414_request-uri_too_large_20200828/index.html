@@ -13,19 +13,19 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="shanzhi7">
+  <meta name="author" content="imwang77">
   <meta name="keywords" content="">
   
     <meta name="description" content="起因 领导要求对一批对内部人员服务的域名统一更换成https,为了方便采取更改CLB的监听转发方式实现*　即由原TCP协议监听更换成https监听  配置完成后，第二天研发人员说出现请求参数过长报错    解决办法 像这种报错，一般都是再nginx配置文件中加大 请求大小 的限制 一般都加在nginx.conf的http区域，使其全局生效，nginx -s reload 重读配置文件即可  123">
 <meta property="og:type" content="article">
 <meta property="og:title" content="QA_414_request-uri_too_large_20200828">
-<meta property="og:url" content="https://shanzhi7.github.io/2020/08/28/QA_414_request-uri_too_large_20200828/index.html">
-<meta property="og:site_name" content="shanzhi7 BLOG">
+<meta property="og:url" content="https://imwang77.github.io/2020/08/28/QA_414_request-uri_too_large_20200828/index.html">
+<meta property="og:site_name" content="imwang77 BLOG">
 <meta property="og:description" content="起因 领导要求对一批对内部人员服务的域名统一更换成https,为了方便采取更改CLB的监听转发方式实现*　即由原TCP协议监听更换成https监听  配置完成后，第二天研发人员说出现请求参数过长报错    解决办法 像这种报错，一般都是再nginx配置文件中加大 请求大小 的限制 一般都加在nginx.conf的http区域，使其全局生效，nginx -s reload 重读配置文件即可  123">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-08-27T16:00:00.000Z">
 <meta property="article:modified_time" content="2024-01-03T07:29:03.484Z">
-<meta property="article:author" content="shanzhi7">
+<meta property="article:author" content="imwang77">
 <meta property="article:tag" content="Nginx">
 <meta property="article:tag" content="414">
 <meta property="article:tag" content="http状态码">
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>QA_414_request-uri_too_large_20200828 - shanzhi7 BLOG</title>
+  <title>QA_414_request-uri_too_large_20200828 - imwang77 BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -73,7 +73,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"shanzhi7.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"imwang77.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -373,13 +373,13 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>QA_414_request-uri_too_large_20200828</div>
-      <div>https://shanzhi7.github.io/2020/08/28/QA_414_request-uri_too_large_20200828/</div>
+      <div>https://imwang77.github.io/2020/08/28/QA_414_request-uri_too_large_20200828/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>shanzhi7</div>
+          <div>imwang77</div>
         </div>
       
       

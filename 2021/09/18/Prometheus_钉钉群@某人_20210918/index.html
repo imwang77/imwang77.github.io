@@ -13,19 +13,19 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="shanzhi7">
+  <meta name="author" content="imwang77">
   <meta name="keywords" content="">
   
     <meta name="description" content="简述之前写过一篇钉钉群@某人操作，但是实现过程过于复杂，还需要引入额外的插件（prometheus-webhook-dingtalk），现在PrometheusAlert插件已经支持@功能。而且之前是通过不同的监控任务实现的业务分组 感觉有些僵硬，现在通过为每个应用打标签的功能来实现不同的告警对象，两者结合使用。 配置项的标签123456789- targets:  - &quot;10.0.1.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus_钉钉群@某人_20210918">
-<meta property="og:url" content="https://shanzhi7.github.io/2021/09/18/Prometheus_%E9%92%89%E9%92%89%E7%BE%A4@%E6%9F%90%E4%BA%BA_20210918/index.html">
-<meta property="og:site_name" content="shanzhi7 BLOG">
+<meta property="og:url" content="https://imwang77.github.io/2021/09/18/Prometheus_%E9%92%89%E9%92%89%E7%BE%A4@%E6%9F%90%E4%BA%BA_20210918/index.html">
+<meta property="og:site_name" content="imwang77 BLOG">
 <meta property="og:description" content="简述之前写过一篇钉钉群@某人操作，但是实现过程过于复杂，还需要引入额外的插件（prometheus-webhook-dingtalk），现在PrometheusAlert插件已经支持@功能。而且之前是通过不同的监控任务实现的业务分组 感觉有些僵硬，现在通过为每个应用打标签的功能来实现不同的告警对象，两者结合使用。 配置项的标签123456789- targets:  - &quot;10.0.1.">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-17T16:00:00.000Z">
 <meta property="article:modified_time" content="2021-09-18T03:31:10.497Z">
-<meta property="article:author" content="shanzhi7">
+<meta property="article:author" content="imwang77">
 <meta property="article:tag" content="Prometheus">
 <meta property="article:tag" content="dingtalk">
 <meta name="twitter:card" content="summary_large_image">
@@ -34,7 +34,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Prometheus_钉钉群@某人_20210918 - shanzhi7 BLOG</title>
+  <title>Prometheus_钉钉群@某人_20210918 - imwang77 BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -72,7 +72,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"shanzhi7.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"imwang77.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -361,13 +361,13 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Prometheus_钉钉群@某人_20210918</div>
-      <div>https://shanzhi7.github.io/2021/09/18/Prometheus_钉钉群@某人_20210918/</div>
+      <div>https://imwang77.github.io/2021/09/18/Prometheus_钉钉群@某人_20210918/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>shanzhi7</div>
+          <div>imwang77</div>
         </div>
       
       

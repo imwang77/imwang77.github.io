@@ -13,19 +13,19 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="shanzhi7">
+  <meta name="author" content="imwang77">
   <meta name="keywords" content="">
   
     <meta name="description" content="简介 A:备份源数据库，将A中某个数据进行备份B:操作机，将A的数据备份到B机器上  在A机器上创建用户1234567891011121314create user dbexp identified by “passwd”;&#96;&#96;&#96;&#96;### 在A机器上授权&#96;&#96;&#96;sqlgrant datapump_exp_full_database to dbexp;&#96;&#96;&#96;&#96;### 在B机器上创建dir&#96;&#96;&#96;sqlc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Oracle-DBLink备份远端数据库">
-<meta property="og:url" content="https://shanzhi7.github.io/2020/05/10/Oracle_DBLink%E5%A4%87%E4%BB%BD%E8%BF%9C%E7%AB%AF%E6%95%B0%E6%8D%AE%E5%BA%93/index.html">
-<meta property="og:site_name" content="shanzhi7 BLOG">
+<meta property="og:url" content="https://imwang77.github.io/2020/05/10/Oracle_DBLink%E5%A4%87%E4%BB%BD%E8%BF%9C%E7%AB%AF%E6%95%B0%E6%8D%AE%E5%BA%93/index.html">
+<meta property="og:site_name" content="imwang77 BLOG">
 <meta property="og:description" content="简介 A:备份源数据库，将A中某个数据进行备份B:操作机，将A的数据备份到B机器上  在A机器上创建用户1234567891011121314create user dbexp identified by “passwd”;&#96;&#96;&#96;&#96;### 在A机器上授权&#96;&#96;&#96;sqlgrant datapump_exp_full_database to dbexp;&#96;&#96;&#96;&#96;### 在B机器上创建dir&#96;&#96;&#96;sqlc">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-05-09T16:00:00.000Z">
 <meta property="article:modified_time" content="2021-05-28T05:49:43.642Z">
-<meta property="article:author" content="shanzhi7">
+<meta property="article:author" content="imwang77">
 <meta property="article:tag" content="Oracle">
 <meta property="article:tag" content="DBLink">
 <meta property="article:tag" content="Databases">
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Oracle-DBLink备份远端数据库 - shanzhi7 BLOG</title>
+  <title>Oracle-DBLink备份远端数据库 - imwang77 BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -73,7 +73,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"shanzhi7.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"imwang77.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -367,13 +367,13 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Oracle-DBLink备份远端数据库</div>
-      <div>https://shanzhi7.github.io/2020/05/10/Oracle_DBLink备份远端数据库/</div>
+      <div>https://imwang77.github.io/2020/05/10/Oracle_DBLink备份远端数据库/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>shanzhi7</div>
+          <div>imwang77</div>
         </div>
       
       
